@@ -1,0 +1,37 @@
+input {
+http_poller{
+urls => {
+http_request => {
+method => get
+url => "https://ucf5-fap0829-hcm.oracledemos.com/hcmCoreApi/resources/11.1.11/emps/"
+headers => {
+"Content-Type" => "application/json"
+    "Authorization" => "Basic SENNX0lNUEw6aHF2ODc4MzY="
+     "Host" => "ucf5-fap0829-hcm.oracledemos.com"
+     "Accept-Encoding" => "gzip,deflate"
+      "User-Agent" => "Apache-HttpClient/4.1.1"
+    
+}
+}
+}
+request_timeout => 60
+interval => 60
+codec => "json"  
+}
+}
+filter {
+   json {
+           source => "message"
+   }
+}
+
+output {  
+stdout { codec => rubydebug }
+elasticsearch { 
+action => "index"
+hosts => "127.0.0.1:9200"    
+index => "orcleplm-hcm-02"       
+workers => 1
+    
+}
+}
